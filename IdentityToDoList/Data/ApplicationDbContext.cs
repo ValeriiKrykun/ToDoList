@@ -10,7 +10,7 @@ namespace IdentityToDoList.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public DbSet<TodoList> ToDoList { get; set; }
+        public DbSet<TodoListData> TodoListData { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -19,9 +19,9 @@ namespace IdentityToDoList.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<ApplicationUser>()
-                .HasOne(e => e.TodoListData)
-                .WithOne(c => c.ApplicationUsers);
+            builder.Entity<TodoListData>()
+                .HasOne(e => e.ApplicationUsers)
+                .WithMany(c => c.TodoListData);
             base.OnModelCreating(builder);
         }
     }
