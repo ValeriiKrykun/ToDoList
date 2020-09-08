@@ -8,6 +8,6 @@ namespace IdentityToDoList.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public ICollection<TodoList> ToDoList { get; set; }
+        public List<TodoListData> TodoListData { get; set; }
     }
 }

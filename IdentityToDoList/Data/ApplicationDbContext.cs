@@ -19,6 +19,9 @@ namespace IdentityToDoList.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<ApplicationUser>()
+                .HasOne(e => e.TodoListData)
+                .WithOne(c => c.ApplicationUsers);
             base.OnModelCreating(builder);
         }
     }

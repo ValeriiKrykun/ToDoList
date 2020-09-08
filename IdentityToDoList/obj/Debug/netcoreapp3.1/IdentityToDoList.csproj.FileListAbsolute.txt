@@ -95,3 +95,13 @@ C:\Users\kryku\Documents\ToDoListCore\IdentityToDoList\obj\Debug\netcoreapp3.1\I
 C:\Users\kryku\Documents\ToDoListCore\IdentityToDoList\obj\Debug\netcoreapp3.1\Razor\Views\ToDo\Create.cshtml.g.cs
 C:\Users\kryku\Documents\ToDoListCore\IdentityToDoList\obj\Debug\netcoreapp3.1\Razor\Views\ToDo\Edit.cshtml.g.cs
 C:\Users\kryku\Documents\ToDoListCore\IdentityToDoList\obj\Debug\netcoreapp3.1\Razor\Views\ToDo\Index.cshtml.g.cs
+C:\Users\kryku\Documents\GitHub\ToDoList\IdentityToDoList\obj\Debug\netcoreapp3.1\IdentityToDoList.csprojAssemblyReference.cache
+C:\Users\kryku\Documents\GitHub\ToDoList\IdentityToDoList\obj\Debug\netcoreapp3.1\IdentityToDoList.AssemblyInfoInputs.cache
+C:\Users\kryku\Documents\GitHub\ToDoList\IdentityToDoList\obj\Debug\netcoreapp3.1\IdentityToDoList.AssemblyInfo.cs
+C:\Users\kryku\Documents\GitHub\ToDoList\IdentityToDoList\obj\Debug\netcoreapp3.1\IdentityToDoList.csproj.CoreCompileInputs.cache
+C:\Users\kryku\Documents\GitHub\ToDoList\IdentityToDoList\obj\Debug\netcoreapp3.1\IdentityToDoList.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\kryku\Documents\GitHub\ToDoList\IdentityToDoList\obj\Debug\netcoreapp3.1\IdentityToDoList.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\kryku\Documents\GitHub\ToDoList\IdentityToDoList\obj\Debug\netcoreapp3.1\IdentityToDoList.RazorAssemblyInfo.cache
+C:\Users\kryku\Documents\GitHub\ToDoList\IdentityToDoList\obj\Debug\netcoreapp3.1\IdentityToDoList.RazorAssemblyInfo.cs
+C:\Users\kryku\Documents\GitHub\ToDoList\IdentityToDoList\obj\Debug\netcoreapp3.1\IdentityToDoList.dll
+C:\Users\kryku\Documents\GitHub\ToDoList\IdentityToDoList\obj\Debug\netcoreapp3.1\IdentityToDoList.pdb

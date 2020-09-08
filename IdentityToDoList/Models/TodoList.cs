@@ -21,8 +21,5 @@ namespace IdentityToDoList.Models
         [Required(ErrorMessage = "Priority is Required")]
         [Range(1, 10, ErrorMessage = "Priority must be a positive number and not higher than 10")]
         public int Priority { get; set; }
-
-        public virtual string ApplicationUserID { get; set; }
-
     }
 }
