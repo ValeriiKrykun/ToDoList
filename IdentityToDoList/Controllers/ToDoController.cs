@@ -3,6 +3,7 @@ using IdentityToDoList.Entities;
 using IdentityToDoList.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -100,15 +101,14 @@ namespace IdentityToDoList.Controllers
             {
                 var currentUser = context.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
 
-                TodoListData items = new TodoListData
-                {
-                    Content = item.Content,
-                    Datetime = item.Datetime,
-                    ApplicationUsersId = currentUser.Id.ToString(),
-                    Priority = item.Priority
-                };
+                var TaskToUpdate = this.context.Set<TodoListData>().FirstOrDefault(x => x.Id == item.Id);
 
-                context.TodoListData.Update(items);
+                TaskToUpdate.Content = item.Content;
+                TaskToUpdate.Datetime = item.Datetime;
+                TaskToUpdate.ApplicationUsersId = currentUser.Id.ToString();
+                TaskToUpdate.Priority = item.Priority;
+
+                context.TodoListData.Update(TaskToUpdate);
 
                 await context.SaveChangesAsync();
 
