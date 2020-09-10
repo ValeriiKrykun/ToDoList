@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\kryku\\Documents\\GitHub\\ToDoList\\IdentityToDoList\\IdentityToDoList.csproj": {}
+    "C:\\Users\\kryku\\Documents\\ToDoList\\IdentityToDoList\\IdentityToDoList.csproj": {}
   },
   "projects": {
-    "C:\\Users\\kryku\\Documents\\GitHub\\ToDoList\\IdentityToDoList\\IdentityToDoList.csproj": {
+    "C:\\Users\\kryku\\Documents\\ToDoList\\IdentityToDoList\\IdentityToDoList.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\kryku\\Documents\\GitHub\\ToDoList\\IdentityToDoList\\IdentityToDoList.csproj",
+        "projectUniqueName": "C:\\Users\\kryku\\Documents\\ToDoList\\IdentityToDoList\\IdentityToDoList.csproj",
         "projectName": "IdentityToDoList",
-        "projectPath": "C:\\Users\\kryku\\Documents\\GitHub\\ToDoList\\IdentityToDoList\\IdentityToDoList.csproj",
+        "projectPath": "C:\\Users\\kryku\\Documents\\ToDoList\\IdentityToDoList\\IdentityToDoList.csproj",
         "packagesPath": "C:\\Users\\kryku\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\kryku\\Documents\\GitHub\\ToDoList\\IdentityToDoList\\obj\\",
+        "outputPath": "C:\\Users\\kryku\\Documents\\ToDoList\\IdentityToDoList\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\kryku\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -1,4 +1,5 @@
 ﻿using IdentityToDoList.Data;
+using IdentityToDoList.Entities;
 using IdentityToDoList.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ namespace IdentityToDoList.Controllers
             this.context = context;
         }
         [Authorize]
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             var currentUser = context.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
 
@@ -49,7 +50,18 @@ namespace IdentityToDoList.Controllers
         {
             if (ModelState.IsValid)
             {
-                context.Add(item);
+                var currentUser = context.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+
+                TodoListData items = new TodoListData
+                {
+                    Content = item.Content,
+                    Datetime = item.Datetime,
+                    ApplicationUsersId = currentUser.Id.ToString(),
+                    Priority = item.Priority
+                };
+
+                context.TodoListData.Add(items);
+
                 await context.SaveChangesAsync();
 
                 TempData["Success"] = "The item has been added!";
@@ -64,12 +76,20 @@ namespace IdentityToDoList.Controllers
         {
             var item = await context.TodoListData.FindAsync(id);
 
+            TodoListViewModel modelToReturn = new TodoListViewModel
+            {
+                Content = item.Content,
+                Datetime = item.Datetime,
+                Id = item.Id,
+                Priority = item.Priority
+            };
+
             if (item == null)
             {
                 return NotFound();
             }
 
-            return View(item);
+            return View(modelToReturn);
         }
 
         [HttpPost]
@@ -78,7 +98,18 @@ namespace IdentityToDoList.Controllers
         {
             if (ModelState.IsValid)
             {
-                context.Update(item);
+                var currentUser = context.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+
+                TodoListData items = new TodoListData
+                {
+                    Content = item.Content,
+                    Datetime = item.Datetime,
+                    ApplicationUsersId = currentUser.Id.ToString(),
+                    Priority = item.Priority
+                };
+
+                context.TodoListData.Update(items);
+
                 await context.SaveChangesAsync();
 
                 TempData["Success"] = "The item has been updated!";
@@ -90,7 +121,7 @@ namespace IdentityToDoList.Controllers
         }
         public async Task<ActionResult> Delete(int id)
         {
-            TodoListViewModel item = await context.ToDoList.FindAsync(id);
+            TodoListData item = await context.TodoListData.FindAsync(id);
 
             if (item == null)
             {
@@ -98,7 +129,7 @@ namespace IdentityToDoList.Controllers
             }
             else
             {
-                context.ToDoList.Remove(item);
+                context.TodoListData.Remove(item);
                 await context.SaveChangesAsync();
 
                 TempData["Success"] = "The item has been deleted!";

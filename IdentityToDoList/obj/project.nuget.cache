@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "SS0GvAWJ/F4bKTtAZZ92rciTwe+JL4nS6bJprisfu8ZutIwd5JsHHQjMxC9LT6/D8cID7w+w9d2kR3Y3pRlt+Q==",
+  "dgSpecHash": "+UaVBc5AdGl2rpsTSW+HFABQ4Z+cjlsMus/EB636cWSxS6KlWL5PZbuEwW3FPOUJwKplmpHc0wIPqc0/zFXsfg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\kryku\\Documents\\GitHub\\ToDoList\\IdentityToDoList\\IdentityToDoList.csproj",
+  "projectFilePath": "C:\\Users\\kryku\\Documents\\ToDoList\\IdentityToDoList\\IdentityToDoList.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kryku\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.7\\microsoft.aspnetcore.cryptography.internal.3.1.7.nupkg.sha512",
     "C:\\Users\\kryku\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\3.1.7\\microsoft.aspnetcore.cryptography.keyderivation.3.1.7.nupkg.sha512",
