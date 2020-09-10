@@ -25,7 +25,7 @@ namespace IdentityToDoList.Controllers
 
             if (currentUser != null)
             {
-                var items = context.TodoListData.Where(x => x.ApplicationUsersId == Convert.ToInt32(currentUser.Id)).OrderBy(x => x.Priority);
+                var items = context.TodoListData.Where(x => x.ApplicationUsersId == currentUser.Id).OrderBy(x => x.Priority);
 
                 List<TodoListData> todolist = await items.ToListAsync();
 
