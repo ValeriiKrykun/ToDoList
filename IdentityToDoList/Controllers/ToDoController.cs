@@ -16,16 +16,9 @@ namespace IdentityToDoList.Controllers
     public class ToDoController : Controller
     {
         private readonly ApplicationDbContext context;
-        private readonly SignInManager<ApplicationUser> signInManager;
-        public ToDoController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager)
+        public ToDoController(ApplicationDbContext context)
         {
             this.context = context;
-            this.signInManager = signInManager;
-        }
-        public async Task<IActionResult> Logout()
-        {
-            await this.signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
         }
         [Authorize]
         public ActionResult Index()
