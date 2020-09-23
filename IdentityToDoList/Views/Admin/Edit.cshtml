@@ -3,8 +3,9 @@
 @{
     ViewData["Title"] = "Edit";
 }
-
-<h1>Edit</h1>
+@using (Html.BeginForm())
+{
+    <h1>Edit</h1>
 
 <hr />
 <div class="row">
@@ -27,6 +28,7 @@
                 <input asp-for="Priority" class="form-control" />
                 <span asp-validation-for="Priority" class="text-danger"></span>
             </div>
+            @Html.DropDownListFor(model => model.ApplicationUsersId, ViewBag.Users as SelectList)
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -37,6 +39,7 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+}
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

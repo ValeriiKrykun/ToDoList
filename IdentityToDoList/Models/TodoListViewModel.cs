@@ -23,5 +23,7 @@ namespace IdentityToDoList.Models
         public int Priority { get; set; }
 
         public string ApplicationUsersId { get; set; }
+
+        public string UserName { get; set; }
     }
 }

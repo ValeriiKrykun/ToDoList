@@ -1,6 +1,7 @@
 ﻿using IdentityToDoList.Data;
 using IdentityToDoList.Entities;
 using IdentityToDoList.Models;
+using IdentityToDoList.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,15 +11,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static IdentityToDoList.Services.IUserTaskService;
 
 namespace IdentityToDoList.Controllers
 {
     public class ToDoController : Controller
     {
         private readonly ApplicationDbContext context;
-        public ToDoController(ApplicationDbContext context)
+        private readonly IUserTaskService userTask;
+        public ToDoController(ApplicationDbContext context, IUserTaskService userTask)
         {
             this.context = context;
+            this.userTask = userTask;
         }
         [Authorize]
         public ActionResult Index()
@@ -28,6 +32,8 @@ namespace IdentityToDoList.Controllers
             if (currentUser != null)
             {
                 var items = context.TodoListData.Where(x => currentUser.Id == x.ApplicationUsersId).OrderBy(x => x.Priority);
+
+                ViewBag.Message = userTask.GetTasksCountForUser(currentUser.Id);
 
                 List<TodoListViewModel> todoListToReturn = items.Select(x => new TodoListViewModel()
                 {
@@ -43,7 +49,6 @@ namespace IdentityToDoList.Controllers
             {
                 return RedirectToAction("Index");
             }
-
         }
         public IActionResult Create() => View();
         [HttpPost]
