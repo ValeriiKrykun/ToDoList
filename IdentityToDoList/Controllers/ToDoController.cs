@@ -3,15 +3,12 @@ using IdentityToDoList.Entities;
 using IdentityToDoList.Models;
 using IdentityToDoList.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static IdentityToDoList.Services.IUserTaskService;
+using System.Data;
 
 namespace IdentityToDoList.Controllers
 {
@@ -19,6 +16,8 @@ namespace IdentityToDoList.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly IUserTaskService userTask;
+
+        [Obsolete]
         public ToDoController(ApplicationDbContext context, IUserTaskService userTask)
         {
             this.context = context;
@@ -40,7 +39,8 @@ namespace IdentityToDoList.Controllers
                     Content = x.Content,
                     Datetime = x.Datetime,
                     Id = x.Id,
-                    Priority = x.Priority
+                    Priority = x.Priority,
+                    LeadTime = x.LeadTime
                 }).ToList();
 
                 return View(todoListToReturn);
@@ -64,7 +64,8 @@ namespace IdentityToDoList.Controllers
                     Content = item.Content,
                     Datetime = item.Datetime,
                     ApplicationUsersId = currentUser.Id.ToString(),
-                    Priority = item.Priority
+                    Priority = item.Priority,
+                    LeadTime = item.LeadTime
                 };
 
                 context.TodoListData.Add(items);
@@ -88,7 +89,8 @@ namespace IdentityToDoList.Controllers
                 Content = item.Content,
                 Datetime = item.Datetime,
                 Id = item.Id,
-                Priority = item.Priority
+                Priority = item.Priority,
+                LeadTime = item.LeadTime
             };
 
             if (item == null)
@@ -113,6 +115,7 @@ namespace IdentityToDoList.Controllers
                 TaskToUpdate.Datetime = item.Datetime;
                 TaskToUpdate.ApplicationUsersId = currentUser.Id.ToString();
                 TaskToUpdate.Priority = item.Priority;
+                TaskToUpdate.LeadTime = item.LeadTime;
 
                 context.TodoListData.Update(TaskToUpdate);
 
@@ -142,6 +145,48 @@ namespace IdentityToDoList.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public async Task<IActionResult> Start(int id)
+        {
+            var item = await context.TodoListData.FindAsync(id);
+
+            TodoListViewModel modelToReturn = new TodoListViewModel
+            {
+                LeadTime = item.LeadTime
+            };
+
+            return View(modelToReturn);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Start(TodoListViewModel item)
+        {
+                var currentUser = context.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+
+                var TaskToUpdate = this.context.Set<TodoListData>().FirstOrDefault(x => x.Id == item.Id);
+
+                TaskToUpdate.LeadTime = item.LeadTime;
+
+                context.TodoListData.Update(TaskToUpdate);
+
+                await context.SaveChangesAsync();
+
+                TempData["Success"] = "The task has been started!";
+
+                return View(item);
+        }
+        [HttpGet]
+        public IActionResult Stop() => View();
+        [HttpPost]
+        public IActionResult Stop(TodoListViewModel item)
+        {
+            TodoListData items = new TodoListData
+            {
+                Message = item.Message
+            };
+
+            return PartialView("Message", items);
         }
     }
 }

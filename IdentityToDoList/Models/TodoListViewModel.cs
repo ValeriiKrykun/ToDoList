@@ -22,8 +22,11 @@ namespace IdentityToDoList.Models
         [Range(1, 10, ErrorMessage = "Priority must be a positive number and not higher than 10")]
         public int Priority { get; set; }
 
+        [Display(Name = "Lead Time")]
+        [Range(1, 100, ErrorMessage = "Priority must be a positive number and not higher than 10")]
+        public int LeadTime { get; set; }
+        public string Message { get; set; }
         public string ApplicationUsersId { get; set; }
-
         public string UserName { get; set; }
     }
 }

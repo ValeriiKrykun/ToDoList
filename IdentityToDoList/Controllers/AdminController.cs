@@ -39,6 +39,23 @@ namespace IdentityToDoList.Controllers
 
             return View(todoListToReturn);
         }
+        public ActionResult CompletedTasks()
+        {
+            var items = context.TodoListData.Where(x => x.Message != null).OrderBy(x => x.Priority).Include(x => x.ApplicationUsers);
+
+            List<TodoListViewModel> todoListToReturn = items.Select(x => new TodoListViewModel()
+            {
+                Content = x.Content,
+                Datetime = x.Datetime,
+                Id = x.Id,
+                Priority = x.Priority,
+                UserName = x.ApplicationUsers.UserName,
+                LeadTime = x.LeadTime,
+                Message = x.Message
+            }).ToList();
+
+            return View(todoListToReturn);
+        }
         public IActionResult Create()
         {
             var items = this.context.Set<ApplicationUser>().ToList();

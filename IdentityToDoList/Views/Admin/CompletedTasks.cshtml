@@ -1,11 +1,8 @@
 ﻿@model IEnumerable<IdentityToDoList.Models.TodoListViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "CompletedTasks";
 }
-        <p>
-            <a asp-action="Create">Add new todo item</a>
-        </p>
         <table class="table">
             <thead>
                 <tr>
@@ -21,8 +18,8 @@
                     <th>
                         Lead Time
                     </th>
-                    <th>Edit</th>
                     <th>Users</th>
+                    <th>Message</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,11 +39,10 @@
                         @item.LeadTime h
                     </td>
                     <td>
-                        <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a class="btn btn-primary btn-sm" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        @item.UserName
                     </td>
                     <td>
-                        @item.UserName
+                        @item.Message
                     </td>
                 </tr>
                 }
