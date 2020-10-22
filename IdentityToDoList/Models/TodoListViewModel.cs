@@ -17,6 +17,12 @@ namespace IdentityToDoList.Models
         [Display(Name = "Datetime")]
         public DateTime Datetime { get; set; }
 
+        public DateTime SpendTime { get; set; }
+
+        public DateTime Start { get; set; }
+
+        public DateTime Stop { get; set; }
+
         [Display(Name = "Task priority")]
         [Required(ErrorMessage = "Priority is Required")]
         [Range(1, 10, ErrorMessage = "Priority must be a positive number and not higher than 10")]

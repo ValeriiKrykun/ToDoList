@@ -40,7 +40,8 @@ namespace IdentityToDoList.Controllers
                     Datetime = x.Datetime,
                     Id = x.Id,
                     Priority = x.Priority,
-                    LeadTime = x.LeadTime
+                    LeadTime = x.LeadTime,
+                    SpendTime = x.SpendTime
                 }).ToList();
 
                 return View(todoListToReturn);
@@ -79,7 +80,7 @@ namespace IdentityToDoList.Controllers
 
             return View(item);
         }
-
+        [HttpGet]
         public async Task<ActionResult> Edit(int id)
         {
             var item = await context.TodoListData.FindAsync(id);
@@ -147,46 +148,79 @@ namespace IdentityToDoList.Controllers
             return RedirectToAction("Index");
         }
         [HttpGet]
-        public async Task<IActionResult> Start(int id)
+        public async Task<ActionResult> Message(int id)
         {
             var item = await context.TodoListData.FindAsync(id);
 
             TodoListViewModel modelToReturn = new TodoListViewModel
             {
-                LeadTime = item.LeadTime
+                Content = item.Content,
+                Datetime = item.Datetime,
+                Id = item.Id,
+                Priority = item.Priority,
+                LeadTime = item.LeadTime,
+                SpendTime = item.SpendTime
             };
+
+            if (item.SpendTime == DateTime.MinValue)
+            {
+                TempData["Success"] = "The task is not completed!";
+
+                return RedirectToAction("Index");
+            }
 
             return View(modelToReturn);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Start(TodoListViewModel item)
+        public async Task<ActionResult> Message(TodoListViewModel item)
         {
-                var currentUser = context.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+            var TaskToUpdate = this.context.Set<TodoListData>().FirstOrDefault(x => x.Id == item.Id);
 
-                var TaskToUpdate = this.context.Set<TodoListData>().FirstOrDefault(x => x.Id == item.Id);
+            TaskToUpdate.Message = item.Message;
 
-                TaskToUpdate.LeadTime = item.LeadTime;
+            context.TodoListData.Update(TaskToUpdate);
 
-                context.TodoListData.Update(TaskToUpdate);
+            await context.SaveChangesAsync();
 
-                await context.SaveChangesAsync();
+            TempData["Success"] = "The message has been added!";
 
-                TempData["Success"] = "The task has been started!";
-
-                return View(item);
+            return RedirectToAction("Index");
         }
-        [HttpGet]
-        public IActionResult Stop() => View();
-        [HttpPost]
-        public IActionResult Stop(TodoListViewModel item)
+        public async Task<ActionResult> Start(int id)
         {
-            TodoListData items = new TodoListData
-            {
-                Message = item.Message
-            };
+            var start = DateTime.Now;
 
-            return PartialView("Message", items);
+            TodoListData item = await context.TodoListData.FindAsync(id);
+
+            item.Start = start;
+
+            context.TodoListData.Update(item);
+
+            await context.SaveChangesAsync();
+
+            TempData["Success"] = "The task has started";
+
+            return RedirectToAction("Index");
+        }
+        public async Task<ActionResult> Stop(int id)
+        {
+
+            TodoListData item = await context.TodoListData.FindAsync(id);
+
+            var spendTime = DateTime.Now - item.Start;
+
+            var spendTimePlus = item.SpendTime + spendTime;
+
+            item.SpendTime = spendTimePlus;
+
+            context.TodoListData.Update(item);
+
+            await context.SaveChangesAsync();
+
+            TempData["Success"] = "The task has ended";
+
+            return RedirectToAction("Index");
         }
     }
 }

@@ -51,7 +51,8 @@ namespace IdentityToDoList.Controllers
                 Priority = x.Priority,
                 UserName = x.ApplicationUsers.UserName,
                 LeadTime = x.LeadTime,
-                Message = x.Message
+                Message = x.Message,
+                SpendTime = x.SpendTime
             }).ToList();
 
             return View(todoListToReturn);
