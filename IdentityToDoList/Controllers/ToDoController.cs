@@ -95,9 +95,9 @@ namespace IdentityToDoList.Controllers
 
             return View(item);
         }
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
-            TodoListData item = await context.TodoListData.FindAsync(id);
+            var item = userTask.GetTaskId(id);
 
             if (item == null)
             {
@@ -105,8 +105,7 @@ namespace IdentityToDoList.Controllers
             }
             else
             {
-                context.TodoListData.Remove(item);
-                await context.SaveChangesAsync();
+                var task = await userTask.DeleteTask(item);
 
                 TempData["Success"] = "The item has been deleted!";
             }

@@ -18,8 +18,12 @@ namespace IdentityToDoList.Services
 
         TodoListData CreateTaskForUser(TodoListViewModel item, string userId);
 
-        TodoListViewModel GetTaskIdForEdit(int id);
+        Task<TodoListViewModel> GetTaskIdForEdit(int id);
 
         TodoListData EditTaskForUser(TodoListViewModel item, string userId);
+
+        Task<TodoListData> GetTaskId(int id);
+
+        Task<TodoListData> DeleteTask(TodoListData item);
     }
 }

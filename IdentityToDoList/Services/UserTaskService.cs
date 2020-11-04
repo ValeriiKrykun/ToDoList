@@ -100,5 +100,18 @@ namespace IdentityToDoList.Services
 
             return (TaskToUpdate);
         }
+
+        public async Task<TodoListData> GetTaskId(int id)
+        {
+            TodoListData item = await context.TodoListData.FindAsync(id);
+
+            return item;
+        }
+
+        public async Task DeleteTask(Task<TodoListData> item)
+        {
+            context.TodoListData.Remove(item);
+            await context.SaveChangesAsync();
+        }
     }
 }
