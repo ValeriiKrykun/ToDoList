@@ -12,37 +12,25 @@ using System.Data;
 
 namespace IdentityToDoList.Controllers
 {
+    [Authorize]
     public class ToDoController : Controller
     {
         private readonly ApplicationDbContext context;
         private readonly IUserTaskService userTask;
-
-        [Obsolete]
         public ToDoController(ApplicationDbContext context, IUserTaskService userTask)
         {
             this.context = context;
             this.userTask = userTask;
         }
-        [Authorize]
         public ActionResult Index()
         {
-            var currentUser = context.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+            var currentUser = userTask.UserAuthorizationCheck(User.Identity.Name);
 
             if (currentUser != null)
             {
-                var items = context.TodoListData.Where(x => currentUser.Id == x.ApplicationUsersId).OrderBy(x => x.Priority);
-
                 ViewBag.Message = userTask.GetTasksCountForUser(currentUser.Id);
 
-                List<TodoListViewModel> todoListToReturn = items.Select(x => new TodoListViewModel()
-                {
-                    Content = x.Content,
-                    Datetime = x.Datetime,
-                    Id = x.Id,
-                    Priority = x.Priority,
-                    LeadTime = x.LeadTime,
-                    SpendTime = x.SpendTime
-                }).ToList();
+                var todoListToReturn = userTask.GetTasksListForUser(currentUser.Id);
 
                 return View(todoListToReturn);
             }
@@ -58,16 +46,9 @@ namespace IdentityToDoList.Controllers
         {
             if (ModelState.IsValid)
             {
-                var currentUser = context.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                var currentUser = userTask.UserAuthorizationCheck(User.Identity.Name);
 
-                TodoListData items = new TodoListData
-                {
-                    Content = item.Content,
-                    Datetime = item.Datetime,
-                    ApplicationUsersId = currentUser.Id.ToString(),
-                    Priority = item.Priority,
-                    LeadTime = item.LeadTime
-                };
+                var items = userTask.CreateTaskForUser(item, currentUser.Id);
 
                 context.TodoListData.Add(items);
 
@@ -81,20 +62,11 @@ namespace IdentityToDoList.Controllers
             return View(item);
         }
         [HttpGet]
-        public async Task<ActionResult> Edit(int id)
+        public ActionResult Edit(int id)
         {
-            var item = await context.TodoListData.FindAsync(id);
+            var modelToReturn = userTask.GetTaskIdForEdit(id);
 
-            TodoListViewModel modelToReturn = new TodoListViewModel
-            {
-                Content = item.Content,
-                Datetime = item.Datetime,
-                Id = item.Id,
-                Priority = item.Priority,
-                LeadTime = item.LeadTime
-            };
-
-            if (item == null)
+            if (modelToReturn == null)
             {
                 return NotFound();
             }
@@ -108,15 +80,9 @@ namespace IdentityToDoList.Controllers
         {
             if (ModelState.IsValid)
             {
-                var currentUser = context.Users.Where(x => x.Email == User.Identity.Name).FirstOrDefault();
+                var currentUser = userTask.UserAuthorizationCheck(User.Identity.Name);
 
-                var TaskToUpdate = this.context.Set<TodoListData>().FirstOrDefault(x => x.Id == item.Id);
-
-                TaskToUpdate.Content = item.Content;
-                TaskToUpdate.Datetime = item.Datetime;
-                TaskToUpdate.ApplicationUsersId = currentUser.Id.ToString();
-                TaskToUpdate.Priority = item.Priority;
-                TaskToUpdate.LeadTime = item.LeadTime;
+                var TaskToUpdate = userTask.EditTaskForUser(item, currentUser.Id);
 
                 context.TodoListData.Update(TaskToUpdate);
 
