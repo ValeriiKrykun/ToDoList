@@ -47,6 +47,7 @@ namespace IdentityToDoList
             services.AddRazorPages();
             services.AddMvc();
             services.AddTransient<IUserTaskService, UserTaskService>();
+            services.AddTransient<IAdminTaskService, AdminTaskService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

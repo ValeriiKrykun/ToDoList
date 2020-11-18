@@ -18,48 +18,28 @@ namespace IdentityToDoList.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext context;
+        private readonly IAdminTaskService adminTask;
 
-        public AdminController(ApplicationDbContext context)
+        public AdminController(ApplicationDbContext context, IAdminTaskService adminTask)
         {
             this.context = context;
+            this.adminTask = adminTask;
         }
         public ActionResult Index()
         {
-            var items = context.TodoListData.OrderBy(x => x.Priority).Include(x => x.ApplicationUsers);
-
-            List<TodoListViewModel> todoListToReturn = items.Select(x => new TodoListViewModel()
-            {
-                Content = x.Content,
-                Datetime = x.Datetime,
-                Id = x.Id,
-                Priority = x.Priority,
-                UserName = x.ApplicationUsers.UserName,
-                LeadTime = x.LeadTime
-            }).ToList();
+            var todoListToReturn = adminTask.GetTasksListForAdmin(User.Identity.Name);
 
             return View(todoListToReturn);
         }
         public ActionResult CompletedTasks()
         {
-            var items = context.TodoListData.Where(x => x.Message != null).OrderBy(x => x.Priority).Include(x => x.ApplicationUsers);
-
-            List<TodoListViewModel> todoListToReturn = items.Select(x => new TodoListViewModel()
-            {
-                Content = x.Content,
-                Datetime = x.Datetime,
-                Id = x.Id,
-                Priority = x.Priority,
-                UserName = x.ApplicationUsers.UserName,
-                LeadTime = x.LeadTime,
-                Message = x.Message,
-                SpendTime = x.SpendTime
-            }).ToList();
+            var todoListToReturn = adminTask.CompletedTasks(User.Identity.Name);
 
             return View(todoListToReturn);
         }
         public IActionResult Create()
         {
-            var items = this.context.Set<ApplicationUser>().ToList();
+            var items = adminTask.GetUserList();
             ViewBag.Users = new SelectList(items, "Id", "UserName");
 
             return View();
@@ -70,18 +50,7 @@ namespace IdentityToDoList.Controllers
         {
             if (ModelState.IsValid)
             {
-                TodoListData items = new TodoListData
-                {
-                    Content = item.Content,
-                    Datetime = item.Datetime,
-                    ApplicationUsersId = item.ApplicationUsersId,
-                    Priority = item.Priority,
-                    LeadTime = item.LeadTime
-                };
-
-                context.TodoListData.Add(items);
-
-                await context.SaveChangesAsync();
+                await adminTask.CreateTaskForUser(item);
 
                 TempData["Success"] = "The item has been added!";
 
@@ -93,27 +62,17 @@ namespace IdentityToDoList.Controllers
 
         public async Task<ActionResult> Edit(int id)
         {
-            var item = await context.TodoListData.FindAsync(id);
+            var item = await adminTask.GetUserTask(id);
 
-            var items = this.context.Set<ApplicationUser>().ToList();
+            var items = adminTask.GetUserList();
             ViewBag.Users = new SelectList(items, "Id", "UserName");
-
-            TodoListViewModel modelToReturn = new TodoListViewModel
-            {
-                Content = item.Content,
-                Datetime = item.Datetime,
-                Id = item.Id,
-                Priority = item.Priority,
-                ApplicationUsersId = item.ApplicationUsersId,
-                LeadTime = item.LeadTime
-            };
 
             if (item == null)
             {
                 return NotFound();
             }
 
-            return View(modelToReturn);
+            return View(item);
         }
 
         [HttpPost]
@@ -122,17 +81,7 @@ namespace IdentityToDoList.Controllers
         {
             if (ModelState.IsValid)
             {
-                var TaskToUpdate = this.context.Set<TodoListData>().FirstOrDefault(x => x.Id == item.Id);
-
-                TaskToUpdate.Content = item.Content;
-                TaskToUpdate.Datetime = item.Datetime;
-                TaskToUpdate.ApplicationUsersId = item.ApplicationUsersId;
-                TaskToUpdate.Priority = item.Priority;
-                TaskToUpdate.LeadTime = item.LeadTime;
-
-                context.TodoListData.Update(TaskToUpdate);
-
-                await context.SaveChangesAsync();
+                await adminTask.EditTaskForUser(item);
 
                 TempData["Success"] = "The item has been updated!";
 
@@ -143,7 +92,7 @@ namespace IdentityToDoList.Controllers
         }
         public async Task<ActionResult> Delete(int id)
         {
-            TodoListData item = await context.TodoListData.FindAsync(id);
+            var item = await adminTask.GetUserTaskForDelete(id);
 
             if (item == null)
             {
@@ -151,10 +100,11 @@ namespace IdentityToDoList.Controllers
             }
             else
             {
-                context.TodoListData.Remove(item);
-                await context.SaveChangesAsync();
+                await adminTask.DeleteTask(item);
 
                 TempData["Success"] = "The item has been deleted!";
+
+                return RedirectToAction("CompletedTasks");
             }
 
             return RedirectToAction("Index");

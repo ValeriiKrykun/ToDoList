@@ -22,12 +22,12 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.IsInRole("admin"))
                         {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Users tasks</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="CompletedTasks">Completed Tasks</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Users tasks</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="CompletedTasks">Completed Tasks</a>
+                            </li>
                         }
                     </ul>
                 </div>

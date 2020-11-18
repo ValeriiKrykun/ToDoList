@@ -16,14 +16,22 @@ namespace IdentityToDoList.Services
 
         List<TodoListViewModel> GetTasksListForUser(string userId);
 
-        TodoListData CreateTaskForUser(TodoListViewModel item, string userId);
+        Task<TodoListData> CreateTaskForUser(TodoListViewModel item, string userId);
 
         Task<TodoListViewModel> GetTaskIdForEdit(int id);
 
-        TodoListData EditTaskForUser(TodoListViewModel item, string userId);
+        Task<TodoListData> EditTaskForUser(TodoListViewModel item, string userId);
 
         Task<TodoListData> GetTaskId(int id);
 
-        Task<TodoListData> DeleteTask(TodoListData item);
+        Task DeleteTask(TodoListData item);
+
+        Task<TodoListViewModel> Message(int id);
+
+        Task MessageSend(TodoListViewModel item);
+
+        Task Start(int id);
+
+        Task Stop(int id);
     }
 }

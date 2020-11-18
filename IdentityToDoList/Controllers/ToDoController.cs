@@ -1,25 +1,18 @@
-﻿using IdentityToDoList.Data;
-using IdentityToDoList.Entities;
-using IdentityToDoList.Models;
+﻿using IdentityToDoList.Models;
 using IdentityToDoList.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Data;
 
 namespace IdentityToDoList.Controllers
 {
     [Authorize]
     public class ToDoController : Controller
     {
-        private readonly ApplicationDbContext context;
         private readonly IUserTaskService userTask;
-        public ToDoController(ApplicationDbContext context, IUserTaskService userTask)
+        public ToDoController(IUserTaskService userTask)
         {
-            this.context = context;
             this.userTask = userTask;
         }
         public ActionResult Index()
@@ -48,11 +41,7 @@ namespace IdentityToDoList.Controllers
             {
                 var currentUser = userTask.UserAuthorizationCheck(User.Identity.Name);
 
-                var items = userTask.CreateTaskForUser(item, currentUser.Id);
-
-                context.TodoListData.Add(items);
-
-                await context.SaveChangesAsync();
+                var items = await userTask.CreateTaskForUser(item, currentUser.Id);
 
                 TempData["Success"] = "The item has been added!";
 
@@ -62,9 +51,9 @@ namespace IdentityToDoList.Controllers
             return View(item);
         }
         [HttpGet]
-        public ActionResult Edit(int id)
+        public async Task<ActionResult>  Edit(int id)
         {
-            var modelToReturn = userTask.GetTaskIdForEdit(id);
+            var modelToReturn = await userTask.GetTaskIdForEdit(id);
 
             if (modelToReturn == null)
             {
@@ -82,11 +71,7 @@ namespace IdentityToDoList.Controllers
             {
                 var currentUser = userTask.UserAuthorizationCheck(User.Identity.Name);
 
-                var TaskToUpdate = userTask.EditTaskForUser(item, currentUser.Id);
-
-                context.TodoListData.Update(TaskToUpdate);
-
-                await context.SaveChangesAsync();
+                await userTask.EditTaskForUser(item, currentUser.Id);
 
                 TempData["Success"] = "The item has been updated!";
 
@@ -97,7 +82,7 @@ namespace IdentityToDoList.Controllers
         }
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            var item = userTask.GetTaskId(id);
+            var item = await userTask.GetTaskId(id);
 
             if (item == null)
             {
@@ -105,7 +90,7 @@ namespace IdentityToDoList.Controllers
             }
             else
             {
-                var task = await userTask.DeleteTask(item);
+                await userTask.DeleteTask(item);
 
                 TempData["Success"] = "The item has been deleted!";
             }
@@ -115,38 +100,22 @@ namespace IdentityToDoList.Controllers
         [HttpGet]
         public async Task<ActionResult> Message(int id)
         {
-            var item = await context.TodoListData.FindAsync(id);
-
-            TodoListViewModel modelToReturn = new TodoListViewModel
-            {
-                Content = item.Content,
-                Datetime = item.Datetime,
-                Id = item.Id,
-                Priority = item.Priority,
-                LeadTime = item.LeadTime,
-                SpendTime = item.SpendTime
-            };
+            var item = await userTask.Message(id);
 
             if (item.SpendTime == DateTime.MinValue)
             {
-                TempData["Success"] = "The task is not completed!";
+                TempData["Error"] = "The task is not completed!";
 
                 return RedirectToAction("Index");
             }
 
-            return View(modelToReturn);
+            return View(item);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Message(TodoListViewModel item)
         {
-            var TaskToUpdate = this.context.Set<TodoListData>().FirstOrDefault(x => x.Id == item.Id);
-
-            TaskToUpdate.Message = item.Message;
-
-            context.TodoListData.Update(TaskToUpdate);
-
-            await context.SaveChangesAsync();
+            await userTask.MessageSend(item);
 
             TempData["Success"] = "The message has been added!";
 
@@ -154,15 +123,7 @@ namespace IdentityToDoList.Controllers
         }
         public async Task<ActionResult> Start(int id)
         {
-            var start = DateTime.Now;
-
-            TodoListData item = await context.TodoListData.FindAsync(id);
-
-            item.Start = start;
-
-            context.TodoListData.Update(item);
-
-            await context.SaveChangesAsync();
+            await userTask.Start(id);
 
             TempData["Success"] = "The task has started";
 
@@ -171,17 +132,7 @@ namespace IdentityToDoList.Controllers
         public async Task<ActionResult> Stop(int id)
         {
 
-            TodoListData item = await context.TodoListData.FindAsync(id);
-
-            var spendTime = DateTime.Now - item.Start;
-
-            var spendTimePlus = item.SpendTime + spendTime;
-
-            item.SpendTime = spendTimePlus;
-
-            context.TodoListData.Update(item);
-
-            await context.SaveChangesAsync();
+            await userTask.Stop(id);
 
             TempData["Success"] = "The task has ended";
 

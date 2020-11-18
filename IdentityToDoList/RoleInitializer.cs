@@ -11,7 +11,7 @@ namespace IdentityToDoList
     {
         public static async Task InitializeAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            string adminEmail = "admin@gmail.com";
+            string adminEmail = "valeriikrykun@gmail.com";
             string password = "12345";
             if (await roleManager.FindByNameAsync("admin") == null)
             {
