@@ -151,30 +151,6 @@ namespace IdentityToDoList.Services
 
             context.TodoListData.Update(TaskToUpdate);
 
-            var fromAddress = new MailAddress("valeriikrykun@gmail.com", "From Name");
-            var toAddress = new MailAddress("valeriikrykun@gmail.com", "To Name");
-            const string fromPassword = "valera92valera";
-            const string subject = "New message aboout completed task";
-            const string body = "Read message and back to work bitch";
-
-            var smtp = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
-                Timeout = 20000
-            };
-            using (var message = new MailMessage(fromAddress, toAddress)
-            {
-                Subject = subject,
-                Body = body
-            })
-            {
-                smtp.Send(message);
-            }
-
             await context.SaveChangesAsync();
         }
 
